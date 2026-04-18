@@ -39,6 +39,7 @@ class OtpController extends GetxController {
       if (response != null && response.statusCode == 200) {
         jsonDecode(response.body);
         showToast("Otp Verify successfully");
+        NavigationHelper.navigateTo(Routes.homeScreen);
         isLoading.value = false;
       } else {
         isLoading.value = false;

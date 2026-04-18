@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'package:api_integ/core/navigations/navigation_helper/navigation_helper.dart';
+import 'package:api_integ/core/navigations/routes/routes.dart';
 import 'package:api_integ/services/api_services.dart';
 import 'package:api_integ/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -13,26 +16,27 @@ class SignupController extends GetxController {
 
   var isLoading = false.obs;
 
-  Future<void> signup() async {
-    try {
+  Future<void> signup () async {
+    try{
       isLoading.value = true;
-
       http.Response? response = await apiService.signup(
         nameController.text,
         emailController.text,
-        passwordController.text,
+        passwordController.text
       );
       if(response!.statusCode == 200){
         isLoading.value = false;
-        showToast("Signup successfully");
-      } else {
-        isLoading.value = false;
-        showToast("Signup failed");
-      }
-    } catch (e) {
-      log("Signup Exception: $e");
-      Get.snackbar("Error", e.toString());
+        showToast("Signup Successfully");
+        NavigationHelper.navigateTo(Routes.loginScreen);
+      }else
+        {
+          isLoading.value = false;
+          showToast("Signup failed");
+        }
 
+    }
+    catch(e){
+      print(e.toString());
     }
   }
 
