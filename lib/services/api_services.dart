@@ -90,6 +90,17 @@ class ApiService {
     }
   }
 
+  Future<http.Response?> getItems() async {
+    try {
+      final url = Uri.parse(ApiEndpoints.getItem);
+      final response = await http.get(url);
+      return response;
+    } catch (e) {
+      print("Get Items Error: $e");
+      return null;
+    }
+  }
+
   Future<http.Response?> createItem(
     String itemName,
     String itemDescription,
