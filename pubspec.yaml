@@ -42,6 +42,7 @@ dependencies:
   fluttertoast: ^9.0.0
   image_picker: ^1.2.1
   image: ^4.1.7
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

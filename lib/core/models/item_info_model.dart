@@ -1,8 +1,10 @@
 import 'dart:convert';
 
-ItemInfoModel itemInfoModelFromJson(String str) => ItemInfoModel.fromJson(json.decode(str));
+ItemInfoModel itemInfoModelFromJson(String str) =>
+    ItemInfoModel.fromJson(json.decode(str));
 
-String itemInfoModelToJson(ItemInfoModel data) => json.encode(data.toJson());
+String itemInfoModelToJson(ItemInfoModel data) =>
+    json.encode(data.toJson());
 
 class ItemInfoModel {
   final bool success;
@@ -15,11 +17,15 @@ class ItemInfoModel {
     required this.data,
   });
 
-  factory ItemInfoModel.fromJson(Map<String, dynamic> json) => ItemInfoModel(
-    success: json["success"],
-    message: json["message"],
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
-  );
+  factory ItemInfoModel.fromJson(Map<String, dynamic> json) =>
+      ItemInfoModel(
+        success: json["success"] ?? false,
+        message: json["message"] ?? "",
+        data: json["data"] == null
+            ? []
+            : List<Datum>.from(
+            json["data"].map((x) => Datum.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
     "success": success,
@@ -46,20 +52,23 @@ class Datum {
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-    id: json["_id"] ?? "",
+    id: json["id"] ?? "",
     itemName: json["item_name"] ?? "",
     itemDescription: json["item_description"] ?? "",
     itemPoints: json["item_points"] ?? 0,
     itemImage: json["item_image"] ?? "",
-    createdTime: json["createdTime"] != null ? DateTime.parse(json["createdTime"]) : DateTime.now(),
+
+    createdTime: DateTime.parse(
+      json["created_time"] ?? DateTime.now().toIso8601String(),
+    ),
   );
 
   Map<String, dynamic> toJson() => {
-    "_id": id,
+    "id": id,
     "item_name": itemName,
     "item_description": itemDescription,
     "item_points": itemPoints,
     "item_image": itemImage,
-    "createdTime": createdTime.toIso8601String(),
+    "created_time": createdTime.toIso8601String(),
   };
 }

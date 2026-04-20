@@ -2,6 +2,7 @@ import 'package:api_integ/core/navigations/navigation_helper/navigation_helper.d
 import 'package:api_integ/core/navigations/routes/routes.dart';
 import 'package:api_integ/screens/home_screen/controller/home_controller.dart';
 import 'package:api_integ/widgets/info_card_widget.dart';
+import 'package:api_integ/widgets/shimmer_effect.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +13,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Inject the controller
+
     final HomeController controller = Get.put(HomeController());
 
     return Scaffold(
@@ -33,7 +34,13 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return ListView.builder(
+            padding: const EdgeInsets.all(12),
+            itemBuilder: (context, index) {
+              return const ShimmerEffect();
+            },
+          );
+
         }
 
         if (controller.infoList.isEmpty) {
@@ -52,10 +59,10 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: InfoCardWidget(
                   isNetworkImage: true,
-                  image: item.itemImage, // This is now a URL from the API
+                  image: item.itemImage,
                   name: item.itemName,
                   description: item.itemDescription,
-                  time: "${item.createdTime}", // Using points as a placeholder for time/subtitle
+                  time: controller.getTimeAgo(item.createdTime.toString()),
                   color: Colors.blueAccent,
                   rating: item.itemPoints.toString(),
                 ),
