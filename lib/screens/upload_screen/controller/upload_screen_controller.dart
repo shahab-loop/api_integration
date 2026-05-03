@@ -6,11 +6,10 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UploadScreenController extends GetxController {
-  // Image
+
   Rx<File?> selectedImage = Rx<File?>(null);
   final ImagePicker picker = ImagePicker();
 
-  // Controllers
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final ratingController = TextEditingController();
@@ -18,7 +17,6 @@ class UploadScreenController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final ApiService apiService = ApiService();
 
-  // State
   RxBool isFormValid = false.obs;
   RxBool isLoading = false.obs;
 
@@ -31,7 +29,6 @@ class UploadScreenController extends GetxController {
     ratingController.addListener(validateForm);
   }
 
-  // ✅ Validate form
   void validateForm() {
     final name = nameController.text.trim();
     final desc = descriptionController.text.trim();
@@ -45,11 +42,10 @@ class UploadScreenController extends GetxController {
             selectedImage.value != null;
   }
 
-  // ✅ Pick image (compressed)
   Future<void> pickImage() async {
     final XFile? image = await picker.pickImage(
       source: ImageSource.gallery,
-      imageQuality: 60, // 🔥 reduce size (important)
+      imageQuality: 60,
     );
 
     if (image != null) {
@@ -58,21 +54,15 @@ class UploadScreenController extends GetxController {
     }
   }
 
-  // ✅ Remove image
+
   void removeImage() {
     selectedImage.value = null;
     validateForm();
   }
 
-  // ✅ Upload item (MAIN FUNCTION)
-  Future<void> uploadItem() async {
-    // ✅ FIX 1: Safe form check
-    // if (formKey.currentState == null || !formKey.currentState!.validate()) {
-    //   Get.snackbar("Error", "Please fix form errors");
-    //   return;
-    // }
 
-    // ✅ FIX 2: Safe image check
+  Future<void> uploadItem() async {
+
     if (selectedImage.value == null) {
       Get.snackbar("Error", "Image is required");
       return;
@@ -81,7 +71,7 @@ class UploadScreenController extends GetxController {
     try {
       isLoading.value = true;
 
-      final file = selectedImage.value; // no !
+      final file = selectedImage.value;
 
       // Extra safety
       if (file == null || !(await file.exists())) {
@@ -112,7 +102,7 @@ class UploadScreenController extends GetxController {
       showToast("❌ Something went wrong");
     }
   }
-  // ✅ Clear form
+
   void clearForm() {
     nameController.clear();
     descriptionController.clear();

@@ -5,5 +5,5 @@ class ApiEndpoints {
   static const otpVerify = "$baseUrl/api/v1/auth/login/verify-otp";
   static const createItem = "$baseUrl/api/v1/items";
   static const getItem = "$baseUrl/api/v1/items";
-  static const deleteItem = "$baseUrl/api/v1/items/{{itemId}}";
+  // static const deleteItem = "$baseUrl/api/v1/items/{{itemId}}";
 }

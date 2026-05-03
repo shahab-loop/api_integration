@@ -1,10 +1,7 @@
-import 'package:api_integ/screens/home_screen/controller/home_controller.dart';
 import 'package:api_integ/screens/upload_screen/controller/upload_screen_controller.dart';
 import 'package:api_integ/widgets/textfieldwithsvg.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
 
 class UploadScreen extends StatelessWidget {
   static const String routeName = '/uploadScreen';

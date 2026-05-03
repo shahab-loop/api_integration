@@ -1,42 +1,38 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'package:api_integ/core/navigations/navigation_helper/navigation_helper.dart';
-import 'package:api_integ/core/navigations/routes/routes.dart';
-import 'package:api_integ/services/api_services.dart';
-import 'package:api_integ/widgets/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
 class SignupController extends GetxController {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final ApiService apiService = ApiService();
 
-  var isLoading = false.obs;
+  RxBool isLoading = false.obs;
 
-  Future<void> signup () async {
-    try{
+  Future<void> signup() async {
+    try {
       isLoading.value = true;
-      http.Response? response = await apiService.signup(
-        nameController.text,
-        emailController.text,
-        passwordController.text
-      );
-      if(response!.statusCode == 200){
-        isLoading.value = false;
-        showToast("Signup Successfully");
-        NavigationHelper.navigateTo(Routes.loginScreen);
-      }else
-        {
-          isLoading.value = false;
-          showToast("Signup failed");
-        }
 
-    }
-    catch(e){
-      print(e.toString());
+      UserCredential userCredential =
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+
+      print("===== USER CREATED SUCCESSFULLY =====");
+      print("UID: ${userCredential.user?.uid}");
+      print("Email: ${userCredential.user?.email}");
+      print("Name: ${nameController.text}");
+
+      Get.snackbar("Success", "Account created successfully");
+
+    } on FirebaseAuthException catch (e) {
+      print("ERROR: ${e.message}");
+      Get.snackbar("Error", e.message ?? "Signup failed");
+
+    } finally {
+      isLoading.value = false;
     }
   }
 

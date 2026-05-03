@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "206128051806",
+    "project_id": "apiinteg-6bede",
+    "storage_bucket": "apiinteg-6bede.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206128051806:android:3ff1abf7a619afe4bf26cf",
+        "android_client_info": {
+          "package_name": "com.example.api_integ"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4zVGQ_T4ZSHNdTnj9JpJSaQ4zuHsHhmw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

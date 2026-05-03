@@ -2,10 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:api_integ/utils/end_points.dart';
-import 'package:http_parser/http_parser.dart'; // Import this
+import 'package:http_parser/http_parser.dart';
 
 class ApiService {
-  /// SIGNUP
+  Map<String, String> get _headers => {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+  };
+
+  /// SIGNUPMap<String, String> get _headers => {
+  //     "Content-Type": "application/json",
+  //     "Accept": "application/json",
+  //   };
   Future<http.Response?> signup(
     String username,
     String email,
@@ -13,10 +21,9 @@ class ApiService {
   ) async {
     try {
       final url = Uri.parse(ApiEndpoints.signup);
-
       final response = await http.post(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: _headers,
         body: jsonEncode({
           "username": username,
           "email": email,
@@ -24,12 +31,9 @@ class ApiService {
         }),
       );
 
-      // 🔹 Print response in console
       print("===== SIGNUP RESPONSE =====");
       print("Status Code: ${response.statusCode}");
       print("Body: ${response.body}");
-      print("============================");
-
       return response;
     } catch (e) {
       print("Signup Error: $e");
@@ -40,18 +44,15 @@ class ApiService {
   /// LOGIN
   Future<http.Response?> login(
     String email,
-    // String otp,
     String password,
   ) async {
     try {
       final url = Uri.parse(ApiEndpoints.login);
-
       final response = await http.post(
         url,
-        headers: {"Content-Type": "application/json"},
+        headers: _headers,
         body: jsonEncode({
-          "email": email,
-          // "otp": otp,
+          "email": email.trim(),
           "password": password,
         }),
       );
@@ -59,8 +60,6 @@ class ApiService {
       print("===== LOGIN RESPONSE =====");
       print("Status Code: ${response.statusCode}");
       print("Body: ${response.body}");
-      print("============================");
-
       return response;
     } catch (e) {
       print("Login Error: $e");
@@ -72,17 +71,15 @@ class ApiService {
   Future<http.Response?> otpVerification(String email, String otp) async {
     try {
       final url = Uri.parse(ApiEndpoints.otpVerify);
-
       final response = await http.post(
         url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email, "otp": otp}),
+        headers: _headers,
+        body: jsonEncode({"email": email.trim(), "otp": otp.trim()}),
       );
 
       print("===== OTP RESPONSE =====");
       print("Status Code: ${response.statusCode}");
       print("Body: ${response.body}");
-
       return response;
     } catch (e) {
       print("OTP Error: $e");
@@ -93,7 +90,7 @@ class ApiService {
   Future<http.Response?> getItems() async {
     try {
       final url = Uri.parse(ApiEndpoints.getItem);
-      final response = await http.get(url);
+      final response = await http.get(url, headers: _headers);
       return response;
     } catch (e) {
       print("Get Items Error: $e");
@@ -109,34 +106,27 @@ class ApiService {
   ) async {
     try {
       final url = Uri.parse(ApiEndpoints.createItem);
-
       var request = http.MultipartRequest("POST", url);
+      request.headers.addAll({"Accept": "application/json"});
 
       request.fields['item_name'] = itemName;
       request.fields['item_description'] = itemDescription;
       request.fields['item_points'] = itemPoints.toString();
 
-      // Get extension
       String extension = itemImage.path.split('.').last.toLowerCase();
-      // Default to jpeg if unknown
       String mimeType = 'image/jpeg';
       if (extension == 'png') mimeType = 'image/png';
-      if (extension == 'jpg' || extension == 'jpeg') mimeType = 'image/jpeg';
 
       request.files.add(
         await http.MultipartFile.fromPath(
           'item_image',
           itemImage.path,
-          contentType: MediaType.parse(mimeType), // Specify content type
+          contentType: MediaType.parse(mimeType),
         ),
       );
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
-
-      print("Status Code: ${response.statusCode}");
-      print("Body: ${response.body}");
-
       return response;
     } catch (e) {
       print("Create Item Error: $e");
